@@ -1,70 +1,100 @@
-# Getting Started with Create React App
+# Gestión JM - Gastos Compartidos
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplicación mobile-first para gestionar gastos compartidos entre familia.
 
-## Available Scripts
+## Características
 
-In the project directory, you can run:
+- 🔐 **Login con PIN de 4 dígitos** - Acceso rápido y seguro
+- 👥 **3 usuarios**: Mariano, Gabriela, Juan Martín
+- 💰 **Gestión de gastos** - Registro, edición y eliminación
+- 📊 **Balance mensual** - Quién debe a quién
+- 💸 **Transferencias** - Registro de pagos entre usuarios
+- 🔄 **Reintegros** - Sistema automático de reintegros a Juan
+- 📱 **PWA instalable** - Funciona como app nativa
+- 🌙 **Modo oscuro** - Diseño moderno y elegante
 
-### `npm start`
+## Usuarios por defecto
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+| Usuario | PIN |
+|---------|-----|
+| Mariano | 1234 |
+| Gabriela | 4321 |
+| Juan Martín | 1111 |
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Stack Técnico
 
-### `npm test`
+- **Frontend**: React 19 + TailwindCSS
+- **Build**: Create React App (CRACO)
+- **Persistencia**: localStorage (preparado para Firebase)
+- **PWA**: Service Worker + manifest.webmanifest
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Deploy en Vercel
 
-### `npm run build`
+### Pasos:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Subí el código a GitHub** (si no lo hiciste)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. **Andá a [vercel.com](https://vercel.com)** y logueate con GitHub
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Click en "Add New..." → "Project"**
 
-### `npm run eject`
+4. **Importá el repositorio** `GestionJM`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. **Configurá el proyecto:**
+   - **Framework Preset**: Create React App
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm run build` (o `yarn build`)
+   - **Output Directory**: `build`
+   - **Node.js Version**: 18.x
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+6. **Click en "Deploy"**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+7. ¡Listo! Tu app estará en `https://gestion-jm.vercel.app` (o similar)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Variables de entorno (opcional)
 
-## Learn More
+Si en el futuro agregás Firebase:
+```
+REACT_APP_FIREBASE_API_KEY=xxx
+REACT_APP_FIREBASE_AUTH_DOMAIN=xxx
+REACT_APP_FIREBASE_PROJECT_ID=xxx
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Desarrollo local
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+cd frontend
+yarn install
+yarn start
+```
 
-### Code Splitting
+## Estructura del proyecto
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```
+frontend/
+├── public/
+│   ├── icons/           # Iconos PWA
+│   ├── manifest.webmanifest
+│   ├── service-worker.js
+│   └── offline.html
+├── src/
+│   ├── components/      # Componentes React
+│   ├── context/         # AuthContext
+│   ├── services/        # storageService, calculationService
+│   ├── App.js
+│   └── index.js
+└── package.json
+```
 
-### Analyzing the Bundle Size
+## Migración a Firebase (futuro)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+La app está preparada para migrar a Firebase. Solo hay que:
 
-### Making a Progressive Web App
+1. Crear proyecto en Firebase Console
+2. Agregar credenciales en `.env`
+3. Modificar `storageService.js` para usar Firestore
+4. Los componentes no necesitan cambios
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Licencia
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Uso privado - Familia JM

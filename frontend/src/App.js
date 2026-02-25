@@ -1,53 +1,103 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginScreen from './components/LoginScreen';
+import HomeTab from './components/HomeTab';
+import ExpensesTab from './components/ExpensesTab';
+import SettingsTab from './components/SettingsTab';
+import AlertsTab from './components/AlertsTab';
+import ExpenseForm from './components/ExpenseForm';
+import BottomNav from './components/BottomNav';
+import InstallButton from './components/InstallButton';
+import './App.css';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const MainApp = () => {
+  const { isAuthenticated, loading } = useAuth();
+  const [activeTab, setActiveTab] = useState('home');
+  const [showExpenseForm, setShowExpenseForm] = useState(false);
+  const [editingExpense, setEditingExpense] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
+  const handleRefresh = () => {
+    setRefreshKey((k) => k + 1);
   };
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+  const handleAddExpense = () => {
+    setEditingExpense(null);
+    setShowExpenseForm(true);
+  };
+
+  const handleEditExpense = (expense) => {
+    setEditingExpense(expense);
+    setShowExpenseForm(true);
+  };
+
+  const handleCloseExpenseForm = () => {
+    setShowExpenseForm(false);
+    setEditingExpense(null);
+  };
+
+  const handleSaveExpense = () => {
+    handleRefresh();
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginScreen />;
+  }
 
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
+    <div className="min-h-screen bg-slate-900" data-testid="main-app">
+      {/* Install Button */}
+      <InstallButton />
+
+      {/* Header */}
+      <header className="sticky top-0 bg-slate-900/95 backdrop-blur-lg border-b border-slate-800 z-30">
+        <div className="px-4 py-4">
+          <h1 className="text-xl font-bold text-white">Gestión JM</h1>
+          <p className="text-slate-400 text-sm">Gastos Compartidos</p>
+        </div>
       </header>
+
+      {/* Content */}
+      <main key={refreshKey}>
+        {activeTab === 'home' && <HomeTab />}
+        {activeTab === 'expenses' && (
+          <ExpensesTab
+            onAddExpense={handleAddExpense}
+            onEditExpense={handleEditExpense}
+          />
+        )}
+        {activeTab === 'settings' && <SettingsTab />}
+        {activeTab === 'alerts' && <AlertsTab />}
+      </main>
+
+      {/* Bottom Navigation */}
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+
+      {/* Expense Form Modal */}
+      {showExpenseForm && (
+        <ExpenseForm
+          expense={editingExpense}
+          onClose={handleCloseExpenseForm}
+          onSave={handleSaveExpense}
+        />
+      )}
     </div>
   );
 };
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
   );
 }
 
